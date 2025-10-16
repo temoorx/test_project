@@ -205,7 +205,7 @@ class _MoodWheelState extends State<_MoodWheel> {
     final radius = _size / 2;
     final pointerRadius = radius - (_ringWidth / 2);
     final pointerAngle = (-math.pi / 2) + (_selectedIndex * _anglePerSegment);
-    final pointerSize = 32.0;
+    final pointerSize = 50.0;
     final pointerCenter = Offset(
       radius + pointerRadius * math.cos(pointerAngle),
       radius + pointerRadius * math.sin(pointerAngle),
