@@ -1,43 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:test_project/theme/app_colors.dart';
 
-import '../navigation/app_routes.dart';
-
 class AppBottomNav extends StatelessWidget {
-  const AppBottomNav({super.key, required this.activeIndex});
+  const AppBottomNav({
+    super.key,
+    required this.activeIndex,
+    required this.onItemSelected,
+  });
 
   final int activeIndex;
+  final ValueChanged<int> onItemSelected;
 
   static final List<_NavItem> _items = [
-    _NavItem(
-      icon: Icons.local_dining_outlined,
-      label: 'Nutrition',
-      route: AppRoutes.home,
-    ),
-    _NavItem(
-      icon: Icons.calendar_today_outlined,
-      label: 'Plan',
-      route: AppRoutes.plan,
-    ),
-    _NavItem(
-      icon: Icons.emoji_emotions_outlined,
-      label: 'Mood',
-      route: AppRoutes.mood,
-    ),
-    _NavItem(
-      icon: Icons.person_outline,
-      label: 'Profile',
-      route: AppRoutes.profile,
-    ),
+    _NavItem(icon: Icons.local_dining_outlined, label: 'Nutrition'),
+    _NavItem(icon: Icons.calendar_today_outlined, label: 'Plan'),
+    _NavItem(icon: Icons.emoji_emotions_outlined, label: 'Mood'),
+    _NavItem(icon: Icons.person_outline, label: 'Profile'),
   ];
-
-  void _onTap(BuildContext context, int index) {
-    if (index == activeIndex) {
-      return;
-    }
-    final route = _items[index].route;
-    Navigator.of(context).pushNamedAndRemoveUntil(route, (route) => false);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +48,7 @@ class AppBottomNav extends StatelessWidget {
                   child: _BottomNavItem(
                     data: _items[i],
                     isActive: i == activeIndex,
-                    onTap: () => _onTap(context, i),
+                    onTap: () => onItemSelected(i),
                   ),
                 ),
             ],
@@ -81,15 +60,10 @@ class AppBottomNav extends StatelessWidget {
 }
 
 class _NavItem {
-  const _NavItem({
-    required this.icon,
-    required this.label,
-    required this.route,
-  });
+  const _NavItem({required this.icon, required this.label});
 
   final IconData icon;
   final String label;
-  final String route;
 }
 
 class _BottomNavItem extends StatelessWidget {

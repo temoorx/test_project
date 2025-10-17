@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test_project/presentation/widgets/app_bottom_nav.dart';
 import 'package:test_project/theme/app_colors.dart';
 
 class PlanScreen extends StatelessWidget {
@@ -9,7 +8,7 @@ class PlanScreen extends StatelessWidget {
     const DaySchedule(
       dayLabel: 'Mon',
       dayNumber: '8',
-      workout: WorkoutSchedule(
+      workout: const WorkoutSchedule(
         title: 'Arm Blaster',
         tag: 'Arms Workout',
         tagColor: Color(0xFF1F8F5C),
@@ -21,7 +20,7 @@ class PlanScreen extends StatelessWidget {
     const DaySchedule(
       dayLabel: 'Thu',
       dayNumber: '11',
-      workout: WorkoutSchedule(
+      workout: const WorkoutSchedule(
         title: 'Leg Day Blitz',
         tag: 'Leg Workout',
         tagColor: Color(0xFF4B59D9),
@@ -91,7 +90,6 @@ class PlanScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const AppBottomNav(activeIndex: 1),
     );
   }
 }

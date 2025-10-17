@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test_project/presentation/widgets/app_bottom_nav.dart';
 import 'package:test_project/theme/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -10,7 +9,6 @@ class HomeScreen extends StatelessWidget {
     return const Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(child: _HomeBody()),
-      bottomNavigationBar: AppBottomNav(activeIndex: 0),
     );
   }
 }

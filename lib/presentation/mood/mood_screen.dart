@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:test_project/presentation/widgets/app_bottom_nav.dart';
 import 'package:test_project/theme/app_colors.dart';
 
 class MoodScreen extends StatefulWidget {
@@ -119,33 +118,6 @@ class _MoodScreenState extends State<MoodScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: const AppBottomNav(activeIndex: 2),
-    );
-  }
-}
-
-class _StatusBar extends StatelessWidget {
-  const _StatusBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: const [
-        Text(
-          '9:41',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        Spacer(),
-        Icon(Icons.signal_cellular_alt, size: 18, color: Colors.white),
-        SizedBox(width: 6),
-        Icon(Icons.wifi, size: 18, color: Colors.white),
-        SizedBox(width: 6),
-        Icon(Icons.battery_full, size: 20, color: Colors.white),
-      ],
     );
   }
 }

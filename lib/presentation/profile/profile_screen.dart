@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:test_project/presentation/widgets/app_bottom_nav.dart';
 import 'package:test_project/theme/app_colors.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -32,7 +31,6 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const AppBottomNav(activeIndex: 3),
     );
   }
 }
