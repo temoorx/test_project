@@ -102,16 +102,16 @@ class _BottomNavItem extends StatelessWidget {
               color: textColor,
             ),
           ),
-          if (isActive)
-            Container(
-              margin: const EdgeInsets.only(top: 8),
-              height: 4,
-              width: 26,
-              decoration: BoxDecoration(
-                color: AppColors.accent,
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
+          // if (isActive)
+          //   Container(
+          //     margin: const EdgeInsets.only(top: 8),
+          //     height: 4,
+          //     width: 26,
+          //     decoration: BoxDecoration(
+          //       color: AppColors.accent,
+          //       borderRadius: BorderRadius.circular(8),
+          //     ),
+          //   ),
         ],
       ),
     );

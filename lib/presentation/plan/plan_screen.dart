@@ -1,36 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:test_project/theme/app_colors.dart';
 
-class PlanScreen extends StatelessWidget {
+const List<DaySchedule> _initialDays = [
+  DaySchedule(
+    dayLabel: 'Mon',
+    dayNumber: '8',
+    workout: WorkoutSchedule(
+      title: 'Arm Blaster',
+      tag: 'Arms Workout',
+      tagColor: Color(0xFF1F8F5C),
+      duration: '25m - 30m',
+    ),
+  ),
+  DaySchedule(dayLabel: 'Tue', dayNumber: '9'),
+  DaySchedule(dayLabel: 'Wed', dayNumber: '10'),
+  DaySchedule(
+    dayLabel: 'Thu',
+    dayNumber: '11',
+    workout: WorkoutSchedule(
+      title: 'Leg Day Blitz',
+      tag: 'Leg Workout',
+      tagColor: Color(0xFF4B59D9),
+      duration: '25m - 30m',
+    ),
+  ),
+  DaySchedule(dayLabel: 'Fri', dayNumber: '12'),
+  DaySchedule(dayLabel: 'Sat', dayNumber: '13'),
+  DaySchedule(dayLabel: 'Sun', dayNumber: '14'),
+];
+
+class PlanScreen extends StatefulWidget {
   const PlanScreen({super.key});
 
-  static const _days = [
-    const DaySchedule(
-      dayLabel: 'Mon',
-      dayNumber: '8',
-      workout: const WorkoutSchedule(
-        title: 'Arm Blaster',
-        tag: 'Arms Workout',
-        tagColor: Color(0xFF1F8F5C),
-        duration: '25m - 30m',
-      ),
-    ),
-    const DaySchedule(dayLabel: 'Tue', dayNumber: '9'),
-    const DaySchedule(dayLabel: 'Wed', dayNumber: '10'),
-    const DaySchedule(
-      dayLabel: 'Thu',
-      dayNumber: '11',
-      workout: const WorkoutSchedule(
-        title: 'Leg Day Blitz',
-        tag: 'Leg Workout',
-        tagColor: Color(0xFF4B59D9),
-        duration: '25m - 30m',
-      ),
-    ),
-    const DaySchedule(dayLabel: 'Fri', dayNumber: '12'),
-    const DaySchedule(dayLabel: 'Sat', dayNumber: '13'),
-    const DaySchedule(dayLabel: 'Sun', dayNumber: '14'),
-  ];
+  @override
+  State<PlanScreen> createState() => _PlanScreenState();
+}
+
+class _PlanScreenState extends State<PlanScreen> {
+  late List<DaySchedule> _days = List<DaySchedule>.of(_initialDays);
+
+  void _handleMoveWorkout(int fromIndex, int toIndex) {
+    if (fromIndex == toIndex) {
+      return;
+    }
+    final WorkoutSchedule? fromWorkout = _days[fromIndex].workout;
+    if (fromWorkout == null) {
+      return;
+    }
+    setState(() {
+      final WorkoutSchedule? targetWorkout = _days[toIndex].workout;
+      final List<DaySchedule> updated = List<DaySchedule>.of(_days);
+      updated[fromIndex] = updated[fromIndex].copyWithWorkout(targetWorkout);
+      updated[toIndex] = updated[toIndex].copyWithWorkout(fromWorkout);
+      _days = updated;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,53 +63,72 @@ class PlanScreen extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Training Calendar',
-                    style: textTheme.headlineSmall?.copyWith(fontSize: 28),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      foregroundColor: AppColors.textPrimary,
-                      textStyle: const TextStyle(fontWeight: FontWeight.w600),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Training Calendar',
+                      style: textTheme.headlineSmall?.copyWith(fontSize: 28),
                     ),
-                    child: const Text('Save'),
-                  ),
-                ],
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.textPrimary,
+                        textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      child: const Text('Save'),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 12),
-              Container(
-                height: 2,
-                decoration: BoxDecoration(
-                  color: AppColors.accent,
-                  borderRadius: BorderRadius.circular(2),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  height: 2,
+                  decoration: BoxDecoration(
+                    color: AppColors.accent,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
-              const _WeekSummary(
-                title: 'Week 2/8',
-                subtitle: 'December 8-14',
-                total: 'Total: 60min',
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: _WeekSummary(
+                  title: 'Week 2/8',
+                  subtitle: 'December 8-14',
+                  total: 'Total: 60min',
+                ),
               ),
               const SizedBox(height: 24),
-              for (final day in _days) ...[
-                _DayScheduleTile(day: day),
+              for (int index = 0; index < _days.length; index++) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: _DayScheduleTile(
+                    day: _days[index],
+                    index: index,
+                    onMoveWorkout: _handleMoveWorkout,
+                  ),
+                ),
                 const SizedBox(height: 24),
               ],
               const SizedBox(height: 12),
-              const _NextWeekSummary(
-                title: 'Week 2',
-                subtitle: 'December 14-22',
-                total: 'Total: 60min',
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: _NextWeekSummary(
+                  title: 'Week 2',
+                  subtitle: 'December 14-22',
+                  total: 'Total: 60min',
+                ),
               ),
+              const SizedBox(height: 32),
             ],
           ),
         ),
@@ -104,6 +147,14 @@ class DaySchedule {
   final String dayLabel;
   final String dayNumber;
   final WorkoutSchedule? workout;
+
+  DaySchedule copyWithWorkout(WorkoutSchedule? nextWorkout) {
+    return DaySchedule(
+      dayLabel: dayLabel,
+      dayNumber: dayNumber,
+      workout: nextWorkout,
+    );
+  }
 }
 
 class WorkoutSchedule {
@@ -137,6 +188,7 @@ class _WeekSummary extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.primary.withOpacity(0.4), width: 2),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(
@@ -163,13 +215,27 @@ class _WeekSummary extends StatelessWidget {
   }
 }
 
+class _WorkoutDragData {
+  const _WorkoutDragData({required this.sourceIndex, required this.workout});
+
+  final int sourceIndex;
+  final WorkoutSchedule workout;
+}
+
 class _DayScheduleTile extends StatelessWidget {
-  const _DayScheduleTile({required this.day});
+  const _DayScheduleTile({
+    required this.day,
+    required this.index,
+    required this.onMoveWorkout,
+  });
 
   final DaySchedule day;
+  final int index;
+  final void Function(int fromIndex, int toIndex) onMoveWorkout;
 
   @override
   Widget build(BuildContext context) {
+    final hasWorkout = day.workout != null;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -193,18 +259,110 @@ class _DayScheduleTile extends StatelessWidget {
         ),
         const SizedBox(width: 20),
         Expanded(
-          child: day.workout == null
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: AppColors.surfaceVariant,
-                  ),
-                )
-              : _WorkoutCard(workout: day.workout!),
+          child: DragTarget<_WorkoutDragData>(
+            onWillAcceptWithDetails: (details) =>
+                details.data.sourceIndex != index,
+            onAcceptWithDetails: (details) =>
+                onMoveWorkout(details.data.sourceIndex, index),
+            builder: (context, candidateData, rejectedData) {
+              final bool isReceiving = candidateData.isNotEmpty;
+              final EdgeInsets padding = hasWorkout && isReceiving
+                  ? const EdgeInsets.all(4)
+                  : EdgeInsets.zero;
+              final BoxDecoration? decoration = hasWorkout && isReceiving
+                  ? BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      border: Border.all(color: AppColors.accent, width: 1.5),
+                    )
+                  : null;
+
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 160),
+                curve: Curves.easeInOut,
+                padding: padding,
+                decoration: decoration,
+                child: hasWorkout
+                    ? _DraggableWorkoutCard(index: index, workout: day.workout!)
+                    : _EmptyWorkoutSlot(isHighlighted: isReceiving),
+              );
+            },
+          ),
         ),
       ],
+    );
+  }
+}
+
+class _DraggableWorkoutCard extends StatelessWidget {
+  const _DraggableWorkoutCard({required this.workout, required this.index});
+
+  final WorkoutSchedule workout;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return LongPressDraggable<_WorkoutDragData>(
+      data: _WorkoutDragData(sourceIndex: index, workout: workout),
+      dragAnchorStrategy: childDragAnchorStrategy,
+      feedback: _WorkoutDragPreview(workout: workout),
+      childWhenDragging: Opacity(
+        opacity: 0.35,
+        child: _WorkoutCard(workout: workout),
+      ),
+      child: _WorkoutCard(workout: workout),
+    );
+  }
+}
+
+class _WorkoutDragPreview extends StatelessWidget {
+  const _WorkoutDragPreview({required this.workout});
+
+  final WorkoutSchedule workout;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      elevation: 8,
+      borderRadius: BorderRadius.circular(24),
+      child: IgnorePointer(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 220, maxWidth: 320),
+          child: SizedBox(width: 260, child: _WorkoutCard(workout: workout)),
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyWorkoutSlot extends StatelessWidget {
+  const _EmptyWorkoutSlot({required this.isHighlighted});
+
+  final bool isHighlighted;
+
+  @override
+  Widget build(BuildContext context) {
+    final Color borderColor = isHighlighted
+        ? AppColors.accent
+        : AppColors.surfaceVariant;
+    final Color backgroundColor = isHighlighted
+        ? AppColors.surface
+        : AppColors.background;
+    return Container(
+      height: 96,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: borderColor, width: 1.4),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        'Drag workout here',
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: AppColors.textSecondary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
   }
 }
@@ -277,13 +435,16 @@ class _WorkoutCard extends StatelessWidget {
         ),
         Positioned(
           left: 0,
-          top: 12,
-          bottom: 12,
+          top: 0,
+          bottom: 0,
           child: Container(
             width: 12,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(8),
+                bottomLeft: Radius.circular(8),
+              ),
             ),
           ),
         ),
@@ -309,7 +470,6 @@ class _NextWeekSummary extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.primary.withOpacity(0.4), width: 2),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Row(

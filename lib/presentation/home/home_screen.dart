@@ -374,7 +374,7 @@ class _InsightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      constraints: const BoxConstraints(minHeight: 200),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(8),
@@ -471,6 +471,7 @@ class _WeightCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       padding: const EdgeInsets.all(22),
+      constraints: const BoxConstraints(minHeight: 200),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -546,51 +547,64 @@ class _HydrationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      padding: const EdgeInsets.all(22),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '0%',
-            style: TextStyle(
-              fontSize: 44,
-              fontWeight: FontWeight.w700,
-              color: AppColors.accent,
-            ),
+    return Stack(
+      children: [
+        // Main content
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(8),
           ),
-          const SizedBox(height: 6),
-          const Text(
-            'Hydration',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
-            ),
+          padding: const EdgeInsets.all(22),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '0%',
+                style: TextStyle(
+                  fontSize: 44,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.accent,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Hydration',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Log Now',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 24),
+              const _HydrationScale(),
+              const SizedBox(height: 40),
+            ],
           ),
-          const SizedBox(height: 6),
-          const Text(
-            'Log Now',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
-            ),
-          ),
-          const SizedBox(height: 24),
-          const _HydrationScale(),
-          const SizedBox(height: 24),
-          Container(
-            width: double.infinity,
+        ),
+
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
             padding: const EdgeInsets.symmetric(vertical: 14),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.16),
-              borderRadius: BorderRadius.circular(16),
+              color: AppColors.primary.withValues(alpha: .16),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(8),
+                bottomRight: Radius.circular(8),
+              ),
             ),
             child: const Text(
               '500 ml added to water log',
@@ -602,8 +616,8 @@ class _HydrationCard extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
